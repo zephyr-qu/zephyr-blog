@@ -5,11 +5,7 @@ type Props = Project;
 
 const { title, techs, link, badge, isComingSoon } = Astro.props;
 
-const badgeStyles: Record<string, string> = {
-  info: "bg-sky-500/15 text-sky-400 light:text-sky-700 border-sky-500/25",
-  warning: "bg-amber-500/15 text-amber-400 light:text-amber-700 border-amber-500/25",
-  tip: "bg-emerald-500/15 text-emerald-400 light:text-emerald-700 border-emerald-500/25",
-};
+const badgeClass = "bg-surface-secondary text-text-secondary border-border";
 const formatTechs = (values: string[]) =>
   values.toString().replaceAll(",", " • ");
 ---
@@ -40,7 +36,8 @@ const formatTechs = (values: string[]) =>
             <p class="font-heading text-text-primary">{title}</p>
             {
               badge && (
-                <span class="w-fit shrink-0 rounded-md border px-2.5 py-0.5 text-xs {badgeStyles[badge.type]}">
+                <span class:list={["flex w-fit shrink-0 items-center gap-1.5 rounded-md border px-2.5 py-0.5 text-xs", badgeClass]}>
+                  <span class="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true"></span>
                   {badge.text}
                 </span>
               )
