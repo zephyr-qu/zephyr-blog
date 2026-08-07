@@ -22,6 +22,10 @@ type Props = {
 
 const { post } = Astro.props;
 
+// 防御:SSR 模式下访问未列出的 slug 时 props 可能为空
+if (!post) {
+  return new Response(null, { status: 404 });
+}
 const rendered = await render(post).catch(() => null);
 const Content = rendered?.Content;
 const headings = rendered?.headings;
