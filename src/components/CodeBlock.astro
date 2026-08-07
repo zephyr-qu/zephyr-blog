@@ -8,7 +8,7 @@
 <script>
 (function () {
   function enhanceCodeBlocks() {
-    var pres = document.querySelectorAll('.post pre.astro-code, .post pre:has(> code)');
+    var pres = document.querySelectorAll<HTMLElement>('.post pre.astro-code, .post pre:has(> code)');
     if (pres.length === 0) return;
 
     pres.forEach(function (pre) {

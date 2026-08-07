@@ -93,7 +93,7 @@ const { toc } = Astro.props;
   )
 }
 
-<script>
+<script is:inline>
 (function () {
   /* ═══════════════════════════════════════
      Desktop: position TOC sidebar
@@ -137,7 +137,7 @@ const { toc } = Astro.props;
 
   /* ── Click: smooth scroll, prevent hash navigation ── */
 
-  function handleTocClick(link) {
+  function handleTocClick(/** @type {Element} */ link) {
     var href = link.getAttribute('href');
     if (href && href.startsWith('#')) {
       var targetEl = document.getElementById(href.slice(1));
@@ -163,8 +163,7 @@ const { toc } = Astro.props;
 
   var activeOffset = 96;
 
-  /** @param {string | null} id */
-  function setActive(id) {
+  function setActive(/** @type {string | null} */ id) {
     if (id == null) {
       links.forEach(function (link) { link.classList.remove('active'); });
       return;
@@ -177,7 +176,7 @@ const { toc } = Astro.props;
   if (headings.length > 0) {
     var observer = new IntersectionObserver(
       function () {
-        var activeId = null;
+        var activeId = /** @type {string | null} */ (null);
         for (var i = headings.length - 1; i >= 0; i--) {
           var h = headings[i];
           if (!h) continue;
@@ -212,12 +211,12 @@ const { toc } = Astro.props;
     document.body.style.overflow = 'hidden';
   }
 
-  function closeDrawer() {
+  var closeDrawer = function () {
     if (!drawer || !drawerOverlay) return;
     drawer.classList.remove('open');
     drawerOverlay.classList.remove('open');
     document.body.style.overflow = '';
-  }
+  };
 
   if (drawerTrigger) {
     drawerTrigger.addEventListener('click', openDrawer);
@@ -252,7 +251,7 @@ const { toc } = Astro.props;
     if (headings.length > 0) {
       var drawerObserver = new IntersectionObserver(
         function () {
-          var activeId = null;
+          var activeId = /** @type {string | null} */ (null);
           for (var i = headings.length - 1; i >= 0; i--) {
             var h = headings[i];
             if (!h) continue;
@@ -303,7 +302,7 @@ const { toc } = Astro.props;
 
     // Update current section name in the bar
     if (scrollSection && headings.length > 0) {
-      var activeId = null;
+      var activeId = /** @type {HTMLElement | null} */ (null);
       for (var i = headings.length - 1; i >= 0; i--) {
         var h = headings[i];
         if (!h) continue;
@@ -322,6 +321,7 @@ const { toc } = Astro.props;
 
   function showScrollBar() {
     if (isBarVisible) return;
+    if (!scrollBar) return;
     scrollBar.classList.add('is-visible');
     scrollBar.setAttribute('aria-hidden', 'false');
     isBarVisible = true;
@@ -329,6 +329,7 @@ const { toc } = Astro.props;
 
   function hideScrollBar() {
     if (!isBarVisible) return;
+    if (!scrollBar) return;
     scrollBar.classList.remove('is-visible');
     scrollBar.setAttribute('aria-hidden', 'true');
     isBarVisible = false;

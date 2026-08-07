@@ -29,8 +29,8 @@ function walk(node: Element | Root) {
 				enhanceImage(img);
 				const figure = createFigureWrapper(img);
 				children[i] = figure;
-			} else if (child.type === "element" || child.type === "root") {
-				walk(child as Element | Root);
+			} else if (child.type === "element") {
+				walk(child);
 			}
 		}
 	}
