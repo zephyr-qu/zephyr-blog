@@ -1,0 +1,357 @@
+---
+interface TocItem {
+  slug: string;
+  text: string;
+  depth: number;
+}
+
+type Props = {
+  toc: TocItem[];
+};
+
+const { toc } = Astro.props;
+---
+
+{
+  toc.length > 0 && (
+    <>
+      {/*
+        ── Desktop TOC: fixed sidebar (lg+) ──
+      */}
+      <nav class="toc-container" id="toc-container">
+        <p class="toc-label">On this page</p>
+        <ul class="toc-list" id="toc-list">
+          {toc.map((h) => (
+            <li class={`toc-item toc-level-${h.depth}`}>
+              <a href={`#${h.slug}`} class="toc-link" data-text={h.text}>{h.text}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/*
+        ── Mobile TOC: floating trigger + left drawer ──
+      */}
+      <button
+        id="toc-mobile-trigger"
+        class="toc-drawer-trigger"
+        aria-label="Open table of contents"
+        style="display:none"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="toc-trigger-icon">
+          <line x1="9" y1="6" x2="21" y2="6" />
+          <line x1="9" y1="12" x2="21" y2="12" />
+          <line x1="9" y1="18" x2="21" y2="18" />
+          <circle cx="4" cy="6" r="1.25" />
+          <circle cx="4" cy="12" r="1.25" />
+          <circle cx="4" cy="18" r="1.25" />
+        </svg>
+        <span class="toc-trigger-label">Contents</span>
+      </button>
+
+      <div class="toc-drawer-overlay" id="toc-drawer-overlay"></div>
+      <div class="toc-drawer" id="toc-drawer">
+        <div class="toc-drawer-header">
+          <div class="toc-drawer-accent"></div>
+          <h3 class="toc-drawer-title">On this page</h3>
+          <button id="toc-drawer-close" class="toc-drawer-close" aria-label="Close table of contents">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <nav class="toc-drawer-body">
+          <ul class="toc-drawer-list">
+            {toc.map((h) => (
+              <li class={`toc-drawer-item toc-level-${h.depth}`}>
+                <a href={`#${h.slug}`} class="toc-drawer-link" data-text={h.text}>{h.text}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div class="toc-drawer-footer">
+          <span class="toc-drawer-footer-text">Zephyr's Blog</span>
+        </div>
+      </div>
+
+      <div id="toc-scroll-bar" class="toc-scroll-bar" aria-hidden="true">
+        <button class="toc-scroll-bar-inner" onclick="document.getElementById('toc-mobile-trigger')?.click()" aria-label="Open table of contents">
+          <svg class="toc-scroll-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="9" y1="6" x2="21" y2="6" />
+            <line x1="9" y1="12" x2="21" y2="12" />
+            <line x1="9" y1="18" x2="21" y2="18" />
+            <circle cx="4" cy="6" r="1.25" />
+            <circle cx="4" cy="12" r="1.25" />
+            <circle cx="4" cy="18" r="1.25" />
+          </svg>
+          <span class="toc-scroll-section" id="toc-scroll-section">On this page</span>
+          <span class="toc-scroll-hint" aria-hidden="true">→</span>
+        </button>
+      </div>
+    </>
+  )
+}
+
+<script>
+(function () {
+  /* ═══════════════════════════════════════
+     Desktop: position TOC sidebar
+     ═══════════════════════════════════════ */
+
+  var tocContainer = document.getElementById('toc-container');
+
+  function positionToc() {
+    if (!tocContainer) return;
+    var main = document.querySelector('main');
+    if (!main) return;
+    var margin = main.getBoundingClientRect().left;
+    if (window.innerWidth >= 1024) {
+      tocContainer.classList.add('is-visible');
+      tocContainer.style.left = Math.max(8, margin - 208) + 'px';
+    } else {
+      tocContainer.classList.remove('is-visible');
+    }
+  }
+
+  document.addEventListener('astro:page-load', positionToc);
+  window.addEventListener('resize', positionToc);
+  positionToc();
+
+  /* ═══════════════════════════════════════
+     Only run heading-tracking / drawer logic
+     if this page actually has a TOC
+     ═══════════════════════════════════════ */
+
+  var container = document.getElementById('toc-container');
+  if (!container || !container.querySelector('.toc-link[href^="#"]')) return;
+
+  var links = Array.from(container.querySelectorAll('.toc-link'));
+  var headings = links
+    .map(function (link) {
+      var href = link.getAttribute('href');
+      if (!href || href === '#') return null;
+      return document.getElementById(href.slice(1));
+    })
+    .filter(Boolean);
+
+  /* ── Click: smooth scroll, prevent hash navigation ── */
+
+  function handleTocClick(link) {
+    var href = link.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      var targetEl = document.getElementById(href.slice(1));
+      if (targetEl) {
+        var top = targetEl.getBoundingClientRect().top + window.scrollY - 96;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+        history.pushState(null, '', href);
+      }
+    }
+  }
+
+  // Desktop TOC clicks
+  container.addEventListener('click', function (e) {
+    var target = e.target;
+    if (!target || !(target instanceof Element)) return;
+    var link = target.closest('.toc-link');
+    if (!link) return;
+    e.preventDefault();
+    handleTocClick(link);
+  });
+
+  /* ── Active heading tracking (IntersectionObserver) ── */
+
+  var activeOffset = 96;
+
+  /** @param {string | null} id */
+  function setActive(id) {
+    if (id == null) {
+      links.forEach(function (link) { link.classList.remove('active'); });
+      return;
+    }
+    links.forEach(function (link) {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+    });
+  }
+
+  if (headings.length > 0) {
+    var observer = new IntersectionObserver(
+      function () {
+        var activeId = null;
+        for (var i = headings.length - 1; i >= 0; i--) {
+          var h = headings[i];
+          if (!h) continue;
+          if (h.getBoundingClientRect().top <= activeOffset) {
+            activeId = h.id;
+            break;
+          }
+        }
+        setActive(activeId);
+      },
+      { rootMargin: '-' + activeOffset + 'px 0px -65% 0px', threshold: 0 }
+    );
+    headings.forEach(function (h) {
+      if (h) observer.observe(h);
+    });
+  }
+
+  /* ═══════════════════════════════════════
+     Mobile drawer logic
+     ═══════════════════════════════════════ */
+
+  var drawerTrigger = document.getElementById('toc-mobile-trigger');
+  var drawer = document.getElementById('toc-drawer');
+  var drawerOverlay = document.getElementById('toc-drawer-overlay');
+  var drawerClose = document.getElementById('toc-drawer-close');
+  var drawerLinks = drawer ? Array.from(drawer.querySelectorAll('.toc-drawer-link')) : [];
+
+  function openDrawer() {
+    if (!drawer || !drawerOverlay) return;
+    drawer.classList.add('open');
+    drawerOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    if (!drawer || !drawerOverlay) return;
+    drawer.classList.remove('open');
+    drawerOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (drawerTrigger) {
+    drawerTrigger.addEventListener('click', openDrawer);
+  }
+
+  if (drawerClose) {
+    drawerClose.addEventListener('click', closeDrawer);
+  }
+
+  if (drawerOverlay) {
+    drawerOverlay.addEventListener('click', closeDrawer);
+  }
+
+  // Close on Escape
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeDrawer();
+  });
+
+  // Drawer link click → scroll to heading + close
+  if (drawer) {
+    drawer.addEventListener('click', function (e) {
+      var target = e.target;
+      if (!target || !(target instanceof Element)) return;
+      var link = target.closest('.toc-drawer-link');
+      if (!link) return;
+      e.preventDefault();
+      handleTocClick(link);
+      closeDrawer();
+    });
+
+    // Synced active state for drawer links
+    if (headings.length > 0) {
+      var drawerObserver = new IntersectionObserver(
+        function () {
+          var activeId = null;
+          for (var i = headings.length - 1; i >= 0; i--) {
+            var h = headings[i];
+            if (!h) continue;
+            if (h.getBoundingClientRect().top <= activeOffset) {
+              activeId = h.id;
+              break;
+            }
+          }
+          drawerLinks.forEach(function (link) {
+            link.classList.toggle('active', link.getAttribute('href') === '#' + activeId);
+          });
+        },
+        { rootMargin: '-' + activeOffset + 'px 0px -65% 0px', threshold: 0 }
+      );
+      headings.forEach(function (h) {
+        if (h) drawerObserver.observe(h);
+      });
+    }
+  }
+
+  /* ═══════════════════════════════════════
+     Scroll-aware auto-hide for edge tab
+     ═══════════════════════════════════════ */
+
+  var scrollBar = document.getElementById('toc-scroll-bar');
+  var scrollSection = document.getElementById('toc-scroll-section');
+  var scrolledPast = false;
+  var barTimeout = null;
+  var isBarVisible = false;
+
+  function updateScrollBar() {
+    if (!scrollBar || !drawerTrigger) return;
+    if (drawer && drawer.classList.contains('open')) {
+      hideScrollBar();
+      return;
+    }
+
+    var currentScrollY = window.scrollY;
+
+    // Show bar after scrolling past article header
+    if (currentScrollY > 400 && !scrolledPast) {
+      scrolledPast = true;
+      showScrollBar();
+    } else if (currentScrollY < 100 && scrolledPast) {
+      scrolledPast = false;
+      hideScrollBar();
+    }
+
+    // Update current section name in the bar
+    if (scrollSection && headings.length > 0) {
+      var activeId = null;
+      for (var i = headings.length - 1; i >= 0; i--) {
+        var h = headings[i];
+        if (!h) continue;
+        if (h.getBoundingClientRect().top <= 100) {
+          activeId = h;
+          break;
+        }
+      }
+      if (activeId) {
+        scrollSection.textContent = activeId.textContent || activeId.innerText || '';
+      } else {
+        scrollSection.textContent = 'On this page';
+      }
+    }
+  }
+
+  function showScrollBar() {
+    if (isBarVisible) return;
+    scrollBar.classList.add('is-visible');
+    scrollBar.setAttribute('aria-hidden', 'false');
+    isBarVisible = true;
+  }
+
+  function hideScrollBar() {
+    if (!isBarVisible) return;
+    scrollBar.classList.remove('is-visible');
+    scrollBar.setAttribute('aria-hidden', 'true');
+    isBarVisible = false;
+  }
+
+  // Listen for scroll to update bar visibility and section title
+  window.addEventListener('scroll', updateScrollBar, { passive: true });
+  updateScrollBar();
+
+  // Close drawer → reshow scroll bar (if scrolled past)
+  if (drawer) {
+    var origCloseDrawer = closeDrawer;
+    closeDrawer = function () {
+      origCloseDrawer();
+      if (scrolledPast) {
+        showScrollBar();
+      }
+    };
+  }
+
+  // Re-bind on View Transition navigations
+  document.addEventListener('astro:page-load', function () {
+    positionToc();
+  });
+})();
+</script>

@@ -1,0 +1,88 @@
+---
+/**
+ * ProseImage — 可复用的文章图片组件
+ *
+ * 两种用法：
+ *  1. 本地图片（自动优化）：<ProseImage src={import("@/assets/blog/photo.png")} alt="描述" />
+ *  2. 远程图片（懒加载 + 响应式）：<ProseImage src="https://example.com/photo.png" alt="描述" />
+ *
+ * 在 MDX 文件中：
+ *   import ProseImage from "@/components/ProseImage.astro"
+ *   <ProseImage src={import("@/assets/blog/screenshot.png")} alt="截图" />
+ */
+
+export type Props = {
+  src: string | ImageMetadata
+  alt: string
+  title?: string
+  width?: number
+  height?: number
+  loading?: 'lazy' | 'eager'
+}
+
+const {
+  src,
+  alt,
+  title,
+  width,
+  height,
+  loading = 'lazy',
+} = Astro.props
+
+const isLocal = typeof src !== 'string'
+---
+
+<figure class="post-figure not-prose">
+  {
+    isLocal ? (
+      <Image
+        src={src}
+        alt={alt}
+        title={title}
+        width={width ?? src.width}
+        height={height ?? src.height}
+        loading={loading}
+        class="post-image"
+      />
+    ) : (
+      <img
+        src={src}
+        alt={alt}
+        title={title}
+        width={width}
+        height={height}
+        loading={loading}
+        decoding="async"
+        class="post-image"
+      />
+    )
+  }
+  {title && <figcaption>{title}</figcaption>}
+</figure>
+
+<style>
+  .post-figure {
+    margin: 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .post-figure figcaption {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    text-align: center;
+    font-style: italic;
+  }
+  .post-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+  }
+  .post-image:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+</style>

@@ -1,0 +1,87 @@
+---
+import removeTrailingSlash from "@/utils/removeTrailingSlash";
+import presentation from "@/data/presentation";
+
+const pathname = removeTrailingSlash(Astro.url.pathname);
+---
+
+<header
+  class="z-40 flex w-full flex-col items-start gap-2 md:flex-row md:items-center md:justify-between"
+>
+  <div class="flex w-full items-center justify-between gap-4 md:w-auto">
+    <a href={`mailto:${presentation.mail}`} class="hover:text-text-primary"
+      >{presentation.mail}</a
+    >
+
+    <button
+      id="theme-toggle"
+      class="group fixed right-5 top-5 z-50 flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg border border-border bg-surface text-text-secondary shadow-sm transition-all duration-300 hover:scale-110 hover:border-border-hover hover:text-text-primary hover:shadow-md md:right-8 md:top-8"
+      aria-label="Toggle theme"
+    >
+      <svg
+        class="absolute h-5 w-5 transition-all duration-500 [transform:rotate(0deg)_scale(1)] light:[transform:rotate(90deg)_scale(0)]"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+      </svg>
+      <svg
+        class="absolute h-5 w-5 transition-all duration-500 [transform:rotate(-90deg)_scale(0)] light:[transform:rotate(0deg)_scale(1)]"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="12" cy="12" r="5" />
+        <line x1="12" y1="1" x2="12" y2="3" />
+        <line x1="12" y1="21" x2="12" y2="23" />
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+        <line x1="1" y1="12" x2="3" y2="12" />
+        <line x1="21" y1="12" x2="23" y2="12" />
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+      </svg>
+    </button>
+  </div>
+
+  <nav role="navigation">
+    <ul role="list" class="flex flex-row gap-2">
+      <li>
+        <a
+          href="/"
+          class:list={{
+            ["hover:text-text-primary"]: true,
+            ["text-text-primary"]: pathname === "/",
+          }}>Home</a
+        >
+      </li>
+      <li>/</li>
+      <li>
+        <a
+          href="/posts"
+          class:list={{
+            ["hover:text-text-primary"]: true,
+            ["text-text-primary"]: pathname === "/posts",
+          }}>Posts</a
+        >
+      </li>
+      <li>/</li>
+      <li>
+        <a
+          href="/search"
+          class:list={{
+            ["hover:text-text-primary"]: true,
+            ["text-text-primary"]: pathname === "/search",
+          }}>Search</a
+        >
+      </li>
+    </ul>
+  </nav>
+</header>

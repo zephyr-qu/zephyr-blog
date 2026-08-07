@@ -1,0 +1,74 @@
+---
+import type { CollectionEntry } from "astro:content";
+import formatDate from "@/utils/formatDate";
+import { getReadTime } from "@/utils/readTime";
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  featured?: boolean;
+};
+
+const { post, featured } = Astro.props;
+---
+
+<article class="group flex flex-col gap-2 border-t border-border py-4">
+  <div class="flex w-full flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+    <div class="flex flex-col gap-1.5">
+      <h2 class="font-heading text-lg">
+        <a
+          href={`/posts/${post.id}`}
+          class="transition-colors hover:text-text-primary"
+        >
+          {post.data.title}
+        </a>
+      </h2>
+      {
+        post.data.tags?.length > 0 && (
+          <ul role="list" class="flex flex-row flex-wrap gap-1.5">
+            {post.data.tags.map((tag) => (
+              <li>
+                <a href={`/tags/${tag}`}
+                  class="rounded-md bg-surface-code px-2 py-0.5 text-xs text-text-secondary transition-colors hover:bg-surface hover:text-text-primary">
+                  {tag}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    <div class="flex shrink-0 flex-row flex-wrap items-center gap-x-3 gap-y-1">
+      {
+        featured && (
+          <span class="rounded-md bg-amber-500/10 px-2 py-0.5 text-xs text-amber-500">置顶</span>
+        )
+      }
+      <time class="whitespace-nowrap text-sm">{formatDate(post.data.publishedAt)}</time>
+      <span aria-hidden="true" class="text-xs text-text-secondary">·</span>
+      <span class="whitespace-nowrap text-xs text-text-secondary">{getReadTime(post.body ?? "")}</span>
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 18 18"
+        fill="none"
+        class="text-arrow transition-all duration-300 group-hover:translate-x-1"
+      >
+        <path
+          d="M5.25 12.75L12.75 5.25"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M5.25 5.25H12.75V12.75"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </div>
+  </div>
+
+  <p class="text-sm text-text-secondary">{post.data.description}</p>
+</article>

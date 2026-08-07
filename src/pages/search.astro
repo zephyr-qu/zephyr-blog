@@ -1,0 +1,230 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout
+  title="Search"
+  description="Search articles on Zephyr's Blog"
+>
+  <main class="mx-auto flex w-full max-w-3xl flex-col gap-8">
+    <h1 class="font-heading text-2xl text-text-primary" style="view-transition-name: page-heading">
+      Search
+    </h1>
+
+    <div id="search" class="pagefind-ui"></div>
+  </main>
+</Layout>
+
+<style is:global>
+  /* ═══════════════════════════════════════════
+     Pagefind default-ui overrides
+     ═══════════════════════════════════════════ */
+
+  /* ── Import Pagefind base styles ── */
+  @import "@pagefind/default-ui/css/ui.css";
+
+  /* ── Search input ── */
+  .pagefind-ui__search-input {
+    border: 1px solid var(--border-color) !important;
+    border-radius: 0.75rem !important;
+    background-color: var(--surface) !important;
+    color: var(--text-primary) !important;
+    font-family: inherit !important;
+    font-size: 1rem !important;
+    padding: 0.75rem 1rem 0.75rem 3rem !important;
+    transition: border-color 0.2s ease !important;
+  }
+
+  .pagefind-ui__search-input:focus {
+    border-color: var(--text-primary) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px oklch(0.6 0.15 30 / 0.15) !important;
+  }
+
+  .pagefind-ui__search-input::placeholder {
+    color: var(--text-secondary) !important;
+    opacity: 0.6 !important;
+  }
+
+  /* ── Search icon ── */
+  .pagefind-ui__search-icon {
+    color: var(--text-secondary) !important;
+    left: 1rem !important;
+  }
+
+  /* ── Clear button ── */
+  .pagefind-ui__search-clear {
+    color: var(--text-secondary) !important;
+    background: var(--surface-secondary) !important;
+    border-radius: 0.5rem !important;
+    padding: 0.25rem !important;
+  }
+
+  .pagefind-ui__search-clear:hover {
+    color: var(--text-primary) !important;
+    background: var(--surface-code) !important;
+  }
+
+  /* ── Filters ── */
+  .pagefind-ui__filter-panel {
+    background: var(--surface-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 0.75rem !important;
+    padding: 1rem !important;
+    margin-top: 0.75rem !important;
+  }
+
+  .pagefind-ui__filter-label {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+  }
+
+  .pagefind-ui__filter-value {
+    color: var(--text-secondary) !important;
+  }
+
+  .pagefind-ui__filter-tag {
+    background: var(--surface-code) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-secondary) !important;
+    border-radius: 0.375rem !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .pagefind-ui__filter-tag:is(:hover, [aria-pressed="true"]) {
+    background: var(--surface) !important;
+    border-color: var(--text-primary) !important;
+    color: var(--text-primary) !important;
+  }
+
+  /* ── Results ── */
+  .pagefind-ui__result {
+    border: 1px solid var(--border-color) !important;
+    border-radius: 0.75rem !important;
+    padding: 1.25rem !important;
+    margin-top: 0.75rem !important;
+    background: var(--surface) !important;
+    transition: border-color 0.2s ease !important;
+  }
+
+  .pagefind-ui__result:hover {
+    border-color: var(--border-hover) !important;
+  }
+
+  .pagefind-ui__result-title {
+    color: var(--text-primary) !important;
+    font-family: var(--font-playfair), "Playfair Display", serif !important;
+    font-size: 1.125rem !important;
+    font-weight: 600 !important;
+  }
+
+  .pagefind-ui__result-title a {
+    color: var(--text-primary) !important;
+    text-decoration: none !important;
+  }
+
+  .pagefind-ui__result-title a:hover {
+    color: var(--text-primary) !important;
+    text-decoration: underline !important;
+  }
+
+  .pagefind-ui__result-excerpt {
+    color: var(--text-secondary) !important;
+    font-size: 0.875rem !important;
+    line-height: 1.6 !important;
+    margin-top: 0.5rem !important;
+  }
+
+  .pagefind-ui__result-excerpt mark {
+    background-color: oklch(0.6 0.15 30 / 0.25) !important;
+    color: var(--text-primary) !important;
+    border-radius: 0.125rem !important;
+    padding: 0 0.125rem !important;
+  }
+
+  .pagefind-ui__result-tag {
+    background: var(--surface-code) !important;
+    color: var(--text-secondary) !important;
+    border-radius: 0.25rem !important;
+    padding: 0.125rem 0.5rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  /* ── Metadata (date) ── */
+  .pagefind-ui__result-nested {
+    color: var(--text-secondary) !important;
+    font-size: 0.75rem !important;
+    opacity: 0.7 !important;
+  }
+
+  /* ── Loader ── */
+  .pagefind-ui__result {
+    --pagefind-ui-scale: 0.9 !important;
+  }
+
+  .pagefind-ui__drawer {
+    margin-top: 0.5rem !important;
+  }
+
+  /* ── Empty / footer ── */
+  .pagefind-ui__message {
+    color: var(--text-secondary) !important;
+    font-size: 0.875rem !important;
+    margin-top: 1rem !important;
+  }
+
+  .pagefind-ui__button {
+    background: var(--surface-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+    border-radius: 0.5rem !important;
+    padding: 0.5rem 1rem !important;
+    font-family: inherit !important;
+    font-size: 0.875rem !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+  }
+
+  .pagefind-ui__button:hover {
+    border-color: var(--border-hover) !important;
+    background: var(--surface-code) !important;
+  }
+
+  /* ── Results count ── */
+  .pagefind-ui__result-count {
+    color: var(--text-secondary) !important;
+    font-size: 0.8125rem !important;
+    font-weight: 500 !important;
+  }
+
+  /* ── Suppress Flash of Unstyled Content ── */
+  .pagefind-ui:not(.pagefind-ui--reset) {
+    --pagefind-ui-primary: var(--text-primary);
+    --pagefind-ui-text: var(--text-secondary);
+    --pagefind-ui-background: var(--surface);
+    --pagefind-ui-border: var(--border-color);
+    --pagefind-ui-tag: var(--surface-code);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 0;
+    --pagefind-ui-image-border-radius: 0;
+    --pagefind-ui-image-box-ratio: 0;
+    --pagefind-ui-font: inherit;
+  }
+</style>
+
+<script>
+  import { PagefindUI } from '@pagefind/default-ui';
+
+  document.addEventListener('astro:page-load', () => {
+    new PagefindUI({
+      element: '#search',
+      showSubResults: false,
+      showImages: false,
+      resetStyles: false,
+      autofocus: true,
+      sort: {
+        date: 'desc',
+      },
+    });
+  });
+</script>

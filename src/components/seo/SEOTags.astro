@@ -1,0 +1,61 @@
+---
+import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION, SITE_TWITTER, SITE_OG_IMAGE, SITE_OG_IMAGE_ALT } from "@/data/config";
+import type { HeadTags } from "@/utils/types/HeadTags";
+import { SEO } from "astro-seo";
+
+type Props = HeadTags;
+
+const { title, description, noindex, og } = Astro.props;
+
+const DEFAULT_TITLE_PAGE = SITE_TITLE;
+const DEFAULT_DESCRIPTION_PAGE = SITE_DESCRIPTION;
+const DEFAULT_URL_SITE = SITE_URL;
+
+const openGraph = {
+  title: title || og?.title || DEFAULT_TITLE_PAGE,
+  type: og?.type || "website",
+  image: og?.image || SITE_OG_IMAGE,
+  alt: og?.alt || SITE_OG_IMAGE_ALT,
+  url: DEFAULT_URL_SITE,
+  description: og?.description || DEFAULT_DESCRIPTION_PAGE,
+};
+---
+
+<SEO
+  charset="UTF-8"
+  title={title || DEFAULT_TITLE_PAGE}
+  description={description || DEFAULT_DESCRIPTION_PAGE}
+  noindex={noindex || false}
+  openGraph={{
+    basic: {
+      title: openGraph.title,
+      type: openGraph.type,
+      image: openGraph.image,
+      url: openGraph.url,
+    },
+    image: {
+      alt: openGraph.alt,
+    },
+  }}
+  twitter={{
+    creator: SITE_TWITTER,
+  }}
+  extend={{
+    link: [
+      { rel: "icon", href: "/favicon.svg" },
+      { rel: "sitemap", href: "/sitemap.xml" },
+    ],
+    meta: [
+      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "generator", content: Astro.generator },
+      {
+        name: "twitter:image",
+        content: openGraph.image,
+      },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: openGraph.title },
+      { name: "twitter:description", content: openGraph.description },
+      { name: "twitter:site", content: SITE_TWITTER },
+    ],
+  }}
+/>

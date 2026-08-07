@@ -1,0 +1,26 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"a"> & {
+  label: string;
+  isUnderline?: boolean;
+};
+
+const { label, isUnderline, ...props } = Astro.props;
+
+const isExternal = typeof props.href === "string" && props.href.startsWith("http");
+---
+
+<a
+  href={props.href}
+  class:list={{
+    ["hover:text-text-primary cursor-pointer"]: true,
+    ["underline decoration-dashed underline-offset-8"]: isUnderline,
+  }}
+  {...props}
+  rel={isExternal ? "noreferrer" : undefined}
+  target={isExternal ? "_blank" : undefined}
+>
+  {label}
+  <span class="sr-only">{label} link</span>
+</a>

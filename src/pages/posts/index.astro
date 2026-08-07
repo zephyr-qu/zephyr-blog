@@ -1,0 +1,71 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import PostListItem from "@/components/PostListItem.astro";
+import Pagination from "@/components/Pagination.astro";
+
+const PAGE_SIZE = 3;
+
+const allPosts = (await getCollection("posts"))
+  .filter((post) =>
+    post.data.isPublish &&
+    !post.data.isDraft &&
+    post.data.publishedAt <= new Date()
+  )
+  .sort((first, second) =>
+    second.data.publishedAt.getTime() - first.data.publishedAt.getTime()
+  );
+
+const featuredPosts = allPosts.filter((post) => post.data.isFeatured);
+const regularPosts = allPosts.filter((post) => !post.data.isFeatured);
+const totalPages = Math.ceil(regularPosts.length / PAGE_SIZE);
+const posts = regularPosts.slice(0, PAGE_SIZE);
+---
+
+<Layout title="Posts">
+  <main class="flex flex-col gap-20">
+    <h1 class="font-heading text-2xl text-text-primary" style="view-transition-name: page-heading">Posts</h1>
+
+    <article class="flex flex-col gap-4" style="view-transition-name: post-list">
+      {
+        featuredPosts.length > 0 && (
+          <>
+            <div class="flex flex-col gap-4">
+              {featuredPosts.map((post) => <PostListItem {post} featured />)}
+            </div>
+            <div class="border-t border-border/50"></div>
+          </>
+        )
+      }
+
+      {posts.map((post) => <PostListItem {post} />)}
+    </article>
+
+    <Pagination currentPage={1} totalPages={totalPages} />
+  </main>
+</Layout>
+
+<style>
+  @keyframes post-list-old {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-24px); }
+  }
+
+  @keyframes post-list-new {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  ::view-transition-old(post-list) {
+    animation: 350ms cubic-bezier(0.22, 1, 0.36, 1) both post-list-old;
+  }
+
+  ::view-transition-new(post-list) {
+    animation: 350ms cubic-bezier(0.22, 1, 0.36, 1) both post-list-new;
+  }
+
+  ::view-transition-old(page-heading),
+  ::view-transition-new(page-heading) {
+    animation: 200ms ease both;
+  }
+</style>

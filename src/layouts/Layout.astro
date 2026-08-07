@@ -1,0 +1,255 @@
+---
+import Header from "../components/Header.astro";
+import BackToTop from "@/components/BackToTop.astro";
+import BlurCircle from "@/components/shared/BlurCircle.astro";
+import theme from "@/data/theme";
+import SEOTags from "@/components/seo/SEOTags.astro";
+import type { HeadTags } from "@/utils/types/HeadTags";
+import ClientRouter from "astro/components/ClientRouter.astro";
+import CodeBlock from "@/components/CodeBlock.astro";
+
+import "@/styles/tailwind.css";
+import "@/styles/post.css";
+
+export type Props = HeadTags;
+
+const headTags = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <SEOTags {...headTags} />
+    <link rel="preload" href="/fonts/open-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/playfair-display-latin-italic.woff2" as="font" type="font/woff2" crossorigin>
+    <ClientRouter />
+    <script is:inline>
+      (function () {
+        function applyTheme() {
+          var theme = localStorage.getItem("theme");
+          if (
+            theme === "light" ||
+            (!theme && window.matchMedia("(prefers-color-scheme: light)").matches)
+          ) {
+            document.documentElement.classList.add("light");
+          } else {
+            document.documentElement.classList.remove("light");
+          }
+        }
+
+        // Apply immediately on first load (before first paint — prevents FOUC)
+        applyTheme();
+
+        // View Transitions strip .light from <html> during swap
+        // Intercept before-swap to preserve the theme class on the incoming document
+        document.addEventListener("astro:before-swap", function (e) {
+          var isLight = document.documentElement.classList.contains("light");
+          var newDoc = e.newDocument;
+          if (newDoc) {
+            if (isLight) {
+              newDoc.documentElement.classList.add("light");
+            } else {
+              newDoc.documentElement.classList.remove("light");
+            }
+          }
+        });
+
+        // Safety net: re-apply after page load
+        document.addEventListener("astro:page-load", applyTheme);
+      })();
+    </script>
+  </head>
+  <body
+    class="mx-auto flex min-h-screen max-w-[872px] flex-col gap-9 bg-surface px-10 py-8 text-sm text-text-secondary md:gap-20 md:py-16"
+  >
+    <Header />
+    <BlurCircle position="top" color={theme.colors.blur.top} />
+    <BlurCircle position="bottom" color={theme.colors.blur.bottom} />
+    <slot />
+    <BackToTop />
+
+    <!-- Image Lightbox -->
+    <div id="lightbox" class="lightbox">
+      <button class="lightbox-close" id="lightbox-close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <img class="lightbox-img" id="lightbox-img" alt="" />
+    </div>
+
+    <style>
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+        padding: 2rem;
+      }
+      .lightbox.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .lightbox-img {
+        max-width: 100%;
+        max-height: 90vh;
+        object-fit: contain;
+        border-radius: 0.5rem;
+        box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      }
+      .lightbox-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+        padding: 0.5rem;
+      }
+      .lightbox-close:hover { opacity: 1; }
+    </style>
+
+    <script>
+      (function () {
+        /* ── Theme toggle ── */
+        document.addEventListener('click', function (e) {
+          var target = e.target;
+          if (!target || !(target instanceof Element)) return;
+          var toggle = target.closest('#theme-toggle');
+          if (!toggle) return;
+
+          var rect = toggle.getBoundingClientRect();
+          var size = Math.max(rect.width, rect.height) * 2;
+          var x = e.clientX - rect.left;
+          var y = e.clientY - rect.top;
+          var ripple = document.createElement('span');
+          ripple.style.cssText =
+            'position:absolute;width:' + size + 'px;height:' + size + 'px;left:' + (x - size / 2) + 'px;top:' + (y - size / 2) + 'px;border-radius:50%;background:currentColor;pointer-events:none;z-index:-1';
+          toggle.appendChild(ripple);
+          ripple.animate(
+            [
+              { transform: 'scale(0)', opacity: '0.3' },
+              { transform: 'scale(1.5)', opacity: '0' },
+            ],
+            { duration: 500, easing: 'ease-out', fill: 'forwards' }
+          ).onfinish = function () { ripple.remove(); };
+
+          document.documentElement.classList.add('theme-transitioning');
+          var isLight = document.documentElement.classList.toggle('light');
+          localStorage.setItem('theme', isLight ? 'light' : 'dark');
+          setTimeout(function () {
+            document.documentElement.classList.remove('theme-transitioning');
+          }, 500);
+        });
+
+        /* ── Back to top ── */
+        var backBtn = document.getElementById('back-to-top');
+        if (backBtn) {
+          var ticking = false;
+          document.addEventListener('scroll', function () {
+            if (!ticking) {
+              requestAnimationFrame(function () {
+                var shouldShow = window.scrollY > 300;
+                // @ts-expect-error - btn is non-null
+                backBtn.style.opacity = shouldShow ? '1' : '0';
+                // @ts-expect-error - btn is non-null
+                backBtn.style.pointerEvents = shouldShow ? 'auto' : 'none';
+                ticking = false;
+              });
+              ticking = true;
+            }
+          }, { passive: true });
+
+          backBtn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+
+        /* ── Image lightbox ── */
+        var lb = document.getElementById('lightbox');
+        var lbImg = document.getElementById('lightbox-img');
+        var lbClose = document.getElementById('lightbox-close');
+
+        if (lb && lbImg && lbClose) {
+          // @ts-expect-error - <script> block
+          function openLightbox(src) {
+            // @ts-expect-error - HTMLImageElement
+            lbImg.src = src;
+            // @ts-expect-error - lb is non-null
+            lb.classList.add('open');
+            document.body.style.overflow = 'hidden';
+          }
+
+          function closeLightbox() {
+            // @ts-expect-error - lb is non-null
+            lb.classList.remove('open');
+            document.body.style.overflow = '';
+          }
+
+          function bindImages() {
+            document.querySelectorAll('.post img').forEach(function (img) {
+              // @ts-expect-error - HTMLImageElement
+              if (img.dataset.lbBound) return;
+              // @ts-expect-error - HTMLImageElement
+              img.dataset.lbBound = 'true';
+              // @ts-expect-error - HTMLImageElement
+              img.style.cursor = 'pointer';
+              // @ts-expect-error - HTMLImageElement
+              img.loading = 'lazy';
+              img.addEventListener('click', function () {
+                // @ts-expect-error - HTMLImageElement
+                openLightbox(img.src);
+              });
+            });
+          }
+
+          lb.addEventListener('click', function (e) {
+            var target = e.target;
+            if (!target) return;
+            // @ts-expect-error - closest check
+            if (target === lb || target === lbClose || target.closest('.lightbox-close')) {
+              closeLightbox();
+            }
+          });
+
+          document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeLightbox();
+          });
+
+          bindImages();
+          document.addEventListener('astro:page-load', bindImages);
+        }
+
+        /* ── Mermaid ── */
+        function loadMermaid() {
+          var blocks = document.querySelectorAll('code.language-mermaid');
+          if (blocks.length === 0) return;
+          if (blocks[0].classList.contains('mermaid-processed')) return;
+
+          import('mermaid').then(function (mod) {
+            var mermaid = mod.default;
+            var theme = document.documentElement.classList.contains('light') ? 'default' : 'dark';
+            // @ts-expect-error - theme type
+            mermaid.initialize({ startOnLoad: false, theme: theme });
+            blocks.forEach(function (b) { b.classList.add('mermaid-processed'); });
+            mermaid.run({ querySelector: 'code.language-mermaid' });
+          });
+        }
+
+        loadMermaid();
+        document.addEventListener('astro:page-load', loadMermaid);
+      })();
+    </script>
+    <CodeBlock />
+  </body>
+</html>

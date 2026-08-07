@@ -1,0 +1,84 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import PostListItem from "@/components/PostListItem.astro";
+import Pagination from "@/components/Pagination.astro";
+
+const PAGE_SIZE = 3;
+
+const allPosts = (await getCollection("posts"))
+  .filter((post) =>
+    post.data.isPublish &&
+    !post.data.isDraft &&
+    post.data.publishedAt <= new Date()
+  )
+  .sort((first, second) =>
+    second.data.publishedAt.getTime() - first.data.publishedAt.getTime()
+  );
+
+const regularPosts = allPosts.filter((post) => !post.data.isFeatured);
+const totalPages = Math.ceil(regularPosts.length / PAGE_SIZE);
+
+export async function getStaticPaths() {
+  const PAGE_SIZE = 3;
+  const all = (await getCollection("posts"))
+    .filter((post) =>
+      post.data.isPublish &&
+      !post.data.isDraft &&
+      post.data.publishedAt <= new Date()
+    )
+    .sort((first, second) =>
+      second.data.publishedAt.getTime() - first.data.publishedAt.getTime()
+    );
+
+  const total = Math.ceil(all.filter((post) => !post.data.isFeatured).length / PAGE_SIZE);
+
+  const paths = [];
+  for (let page = 2; page <= total; page++) {
+    paths.push({ params: { page: String(page) } });
+  }
+  return paths;
+}
+
+const { page } = Astro.params;
+const currentPage = Number(page);
+const start = (currentPage - 1) * PAGE_SIZE;
+const posts = regularPosts.slice(start, start + PAGE_SIZE);
+---
+
+<Layout title={`Posts - Page ${currentPage}`}>
+  <main class="flex flex-col gap-20">
+    <h1 class="font-heading text-2xl text-text-primary" style="view-transition-name: page-heading">Posts</h1>
+
+    <article class="flex flex-col gap-4" style="view-transition-name: post-list">
+      {posts.map((post) => <PostListItem {post} />)}
+    </article>
+
+    <Pagination currentPage={currentPage} totalPages={totalPages} />
+  </main>
+</Layout>
+
+<style>
+  @keyframes post-list-old {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-24px); }
+  }
+
+  @keyframes post-list-new {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  ::view-transition-old(post-list) {
+    animation: 350ms cubic-bezier(0.22, 1, 0.36, 1) both post-list-old;
+  }
+
+  ::view-transition-new(post-list) {
+    animation: 350ms cubic-bezier(0.22, 1, 0.36, 1) both post-list-new;
+  }
+
+  ::view-transition-old(page-heading),
+  ::view-transition-new(page-heading) {
+    animation: 200ms ease both;
+  }
+</style>
