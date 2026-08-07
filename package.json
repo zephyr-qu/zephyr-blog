@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build && node scripts/postbuild.mjs",
-    "preview": "astro preview",
+    "deploy": "pnpm run build && wrangler deploy",
+    "preview": "pnpm run build && wrangler dev",
     "check": "astro check",
     "astro": "astro",
     "new-post": "node scripts/new-post.js"
@@ -27,6 +28,8 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "@types/hast": "^3.0.5"
+    "@astrojs/cloudflare": "^14.1.7",
+    "@types/hast": "^3.0.5",
+    "wrangler": "^4.119.0"
   }
 }

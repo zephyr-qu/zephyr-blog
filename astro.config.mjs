@@ -1,4 +1,5 @@
 import robotsTxt from 'astro-robots-txt'
+import cloudflare from '@astrojs/cloudflare'
 import { defineConfig } from 'astro/config'
 import { SITE_URL } from './src/data/config'
 import { unified } from '@astrojs/markdown-remark'
@@ -10,6 +11,8 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://astro.build/config
 export default defineConfig({
+  output: 'server',
+  adapter: cloudflare(),
   integrations: [
     robotsTxt({
       sitemap: `${SITE_URL}/sitemap.xml`,
