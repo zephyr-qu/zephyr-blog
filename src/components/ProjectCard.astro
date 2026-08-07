@@ -3,8 +3,13 @@ import type { Project } from "@/data/projects";
 
 type Props = Project;
 
-const { title, techs, link, isComingSoon } = Astro.props;
+const { title, techs, link, badge, isComingSoon } = Astro.props;
 
+const badgeStyles: Record<string, string> = {
+  info: "bg-sky-500/15 text-sky-400 light:text-sky-700 border-sky-500/25",
+  warning: "bg-amber-500/15 text-amber-400 light:text-amber-700 border-amber-500/25",
+  tip: "bg-emerald-500/15 text-emerald-400 light:text-emerald-700 border-emerald-500/25",
+};
 const formatTechs = (values: string[]) =>
   values.toString().replaceAll(",", " • ");
 ---
@@ -31,7 +36,16 @@ const formatTechs = (values: string[]) =>
         target="_blank"
       >
         <div class="flex flex-col gap-4 md:flex-row md:items-center">
-          <p class="font-heading text-text-primary">{title}</p>
+          <div class="flex items-center gap-3">
+            <p class="font-heading text-text-primary">{title}</p>
+            {
+              badge && (
+                <span class="w-fit shrink-0 rounded-md border px-2.5 py-0.5 text-xs {badgeStyles[badge.type]}">
+                  {badge.text}
+                </span>
+              )
+            }
+          </div>
           <p>{formatTechs(techs)}</p>
         </div>
 
