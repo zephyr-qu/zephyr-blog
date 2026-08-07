@@ -42,21 +42,9 @@ function greet(name) {
 
 ## 图表 (Mermaid)
 
-```mermaid
-graph TD
-    A[开始] --> B{继续?}
-    B -->|Yes| C[处理]
-    C --> B
-    B -->|No| D[结束]
-```
+![流程示例](/diagrams/flowchart.svg)
 
-```mermaid
-pie title 技术栈
-    "前端" : 40
-    "后端" : 30
-    "数据库" : 20
-    "DevOps" : 10
-```
+![技术栈饼图](/diagrams/pie-chart.svg)
 
 ## 引用
 

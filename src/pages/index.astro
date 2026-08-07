@@ -33,10 +33,10 @@ const posts = (await getCollection("posts"))
         presentation.profile && (
           <Image
             src={presentation.profile}
-            class="w-1/4 self-center"
+            class="w-1/4 h-auto self-center profile-img"
             alt="Your Profile"
             width="200"
-            height="200"
+            height="243"
           />
         )
       }
@@ -106,3 +106,10 @@ const posts = (await getCollection("posts"))
     </article>
   </main>
 </Layout>
+
+<style>
+  /* profile.svg 是黑色剪影,暗色模式下反转为白色 */
+  :root:not(.light) .profile-img {
+    filter: invert(1);
+  }
+</style>

@@ -229,25 +229,6 @@ const headTags = Astro.props;
           bindImages();
           document.addEventListener('astro:page-load', bindImages);
         }
-
-        /* ── Mermaid ── */
-        function loadMermaid() {
-          var blocks = document.querySelectorAll('code.language-mermaid');
-          if (blocks.length === 0) return;
-          if (blocks[0].classList.contains('mermaid-processed')) return;
-
-          import('mermaid').then(function (mod) {
-            var mermaid = mod.default;
-            var theme = document.documentElement.classList.contains('light') ? 'default' : 'dark';
-            // @ts-expect-error - theme type
-            mermaid.initialize({ startOnLoad: false, theme: theme });
-            blocks.forEach(function (b) { b.classList.add('mermaid-processed'); });
-            mermaid.run({ querySelector: 'code.language-mermaid' });
-          });
-        }
-
-        loadMermaid();
-        document.addEventListener('astro:page-load', loadMermaid);
       })();
     </script>
     <CodeBlock />

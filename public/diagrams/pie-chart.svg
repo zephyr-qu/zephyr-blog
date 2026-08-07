@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="340" viewBox="0 0 520 340">
+  <rect x="10" y="10" width="500" height="320" rx="10" fill="#ffffff"/>
+  <rect x="10" y="10" width="500" height="320" rx="10" fill="none" stroke="#e2e8f0"/>
+
+  <!-- 饼图:前端 40% / 后端 30% / 数据库 20% / DevOps 10% -->
+  <path d="M170,60 A110,110 0 0 1 234.7,259.0 L170,170 Z" fill="#2563eb"/>
+  <path d="M234.7,259.0 A110,110 0 0 1 65.4,204.0 L170,170 Z" fill="#10b981"/>
+  <path d="M65.4,204.0 A110,110 0 0 1 105.3,81.0 L170,170 Z" fill="#f59e0b"/>
+  <path d="M105.3,81.0 A110,110 0 0 1 170,60 L170,170 Z" fill="#8b5cf6"/>
+  <circle cx="170" cy="170" r="110" fill="none" stroke="#ffffff" stroke-width="2"/>
+
+  <!-- 图例 -->
+  <rect x="320" y="80" width="16" height="16" rx="3" fill="#2563eb"/>
+  <text x="344" y="94" font-family="sans-serif" font-size="14" fill="#1e293b">前端 40%</text>
+
+  <rect x="320" y="120" width="16" height="16" rx="3" fill="#10b981"/>
+  <text x="344" y="134" font-family="sans-serif" font-size="14" fill="#1e293b">后端 30%</text>
+
+  <rect x="320" y="160" width="16" height="16" rx="3" fill="#f59e0b"/>
+  <text x="344" y="174" font-family="sans-serif" font-size="14" fill="#1e293b">数据库 20%</text>
+
+  <rect x="320" y="200" width="16" height="16" rx="3" fill="#8b5cf6"/>
+  <text x="344" y="214" font-family="sans-serif" font-size="14" fill="#1e293b">DevOps 10%</text>
+</svg>

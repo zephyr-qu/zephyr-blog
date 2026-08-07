@@ -27,7 +27,6 @@ export default defineConfig({
     }),
     syntaxHighlight: {
       type: 'shiki',
-      excludeLangs: ['mermaid'],
     },
     shikiConfig: {
       themes: {
@@ -42,13 +41,6 @@ export default defineConfig({
     plugins: [tailwindcss()],
     build: {
       chunkSizeWarningLimit: 3000,
-      rollupOptions: {
-        output: {
-          manualChunks(id) {
-            if (id.includes('mermaid')) return 'mermaid'
-          },
-        },
-      },
     },
   },
 })
