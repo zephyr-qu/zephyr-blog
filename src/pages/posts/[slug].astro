@@ -48,7 +48,7 @@ const relatedPosts = allPosts
   .slice(0, 3);
 ---
 
-<Layout title={post.data.title} description={post.data.description}>
+<Layout title={post.data.title} description={post.data.description} lang={post.data.lang}>
   <main class="mx-auto flex w-full max-w-4xl flex-col gap-8">
     <nav aria-label="Back to posts">
       <a
@@ -63,7 +63,7 @@ const relatedPosts = allPosts
       </a>
     </nav>
 
-    <header role="presentation" class="flex flex-col gap-3">
+    <header role="presentation" class="flex flex-col gap-3" data-pagefind-body>
       <h1 class="font-heading text-3xl text-text-primary">
         {post.data.title}
       </h1>

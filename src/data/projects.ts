@@ -8,12 +8,6 @@ export type Project = {
 
 const projects: Project[] = [
 	{
-		title: "OnlineR",
-		techs: ["React", "Vite", "TypeScript"],
-		link: "https://gitee.com/zs2084035767/online-resume",
-		badge: { type: "info", text: "Archived" },
-	},
-	{
 		title: "SiftDeep",
 		techs: ["Next.js", "Nest.js", "TypeScript"],
 		link: "https://gitee.com/zs2084035767/SiftDeep",
@@ -36,6 +30,12 @@ const projects: Project[] = [
 		techs: ["Dart", "Flutter", "Signal.dart"],
 		link: "https://gitee.com/zs2084035767/fox_player_app",
 		badge: { type: "tip", text: "v1.0.0" },
+	},
+	{
+		title: "Zephyr Reader",
+		techs: ["Dart", "Flutter", "Rust"],
+		link: "https://github.com/zephyr-qu/zephyr_reader",
+		badge: { type: "tip", text: "In Development" },
 	},
 ];
 

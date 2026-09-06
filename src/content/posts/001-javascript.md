@@ -2,6 +2,7 @@
 title: JavaScript Async
 publishedAt: 2026-08-01
 description: 一篇展示基础 Markdown 语法的示例文章
+lang: "zh-CN"
 tags: [javascript, async]
 isPublish: true
 isDraft: false

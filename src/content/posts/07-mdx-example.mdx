@@ -1,0 +1,42 @@
+---
+title: MDX 示例
+publishedAt: 2026-05-14
+description: 一篇展示 MDX 组件与表达式用法的示例文章
+lang: "zh-CN"
+tags: [mdx, astro]
+isPublish: true
+isDraft: false
+---
+
+import Link from "../../components/shared/Link.astro";
+
+## 在正文里用组件
+
+MDX 的核心是能在 Markdown 里直接使用组件。先 `import`，再像写 JSX 一样使用：
+
+<Link href="https://docs.astro.build" label="Astro 文档" isUnderline={true} />
+
+## 用表达式插值
+
+frontmatter 里可以定义变量，正文用 `{表达式}` 引用：
+
+```mdx
+---
+const site = "Astro";
+---
+
+本站点是 {site} 项目。
+```
+
+## HTML 标签也能混用
+
+```mdx
+<div class="highlight">内联 HTML 与 JSX 语法</div>
+```
+
+## 与普通 Markdown 并存
+
+- **列表**照常使用
+- `代码块` 也没问题
+
+> 引用、表格、图片等 Markdown 语法在 MDX 中全部可用。

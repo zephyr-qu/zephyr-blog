@@ -54,10 +54,34 @@ import Layout from "@/layouts/Layout.astro";
 
   /* ── Clear button ── */
   .pagefind-ui__search-clear {
+    /* Hide the "Clear" text and render an X icon via pseudo-elements */
+    font-size: 0 !important;
     color: var(--text-secondary) !important;
     background: var(--surface-secondary) !important;
     border-radius: 0.5rem !important;
-    padding: 0.25rem !important;
+    padding: 0 !important;
+    width: calc(2.25rem * var(--pagefind-ui-scale, 1)) !important;
+    height: calc(2.25rem * var(--pagefind-ui-scale, 1)) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .pagefind-ui__search-clear::before,
+  .pagefind-ui__search-clear::after {
+    content: "" !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 55% !important;
+    height: 1.5px !important;
+    background: currentColor !important;
+    border-radius: 1px !important;
+  }
+  .pagefind-ui__search-clear::before {
+    transform: translate(-50%, -50%) rotate(45deg) !important;
+  }
+  .pagefind-ui__search-clear::after {
+    transform: translate(-50%, -50%) rotate(-45deg) !important;
   }
 
   .pagefind-ui__search-clear:hover {

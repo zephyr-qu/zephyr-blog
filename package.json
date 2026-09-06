@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build && node scripts/postbuild.mjs",
+    "build": "astro build",
     "deploy": "pnpm run build && wrangler deploy",
     "preview": "pnpm run build && wrangler dev",
     "check": "astro check",
+    "commit": "pi -p --no-extensions --no-skills --no-themes --tools read,bash \"分析当前 git 变更，生成符合 Conventional Commits 规范的提交信息，然后执行 git add、commit 并推送到远程仓库\"",
     "astro": "astro",
     "new-post": "node scripts/new-post.js"
   },
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@astrojs/cloudflare": "^14.1.7",
     "@types/hast": "^3.0.5",
+    "astro-pagefind": "^2.0.1",
     "wrangler": "^4.119.0"
   }
 }

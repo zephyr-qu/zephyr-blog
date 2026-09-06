@@ -6,6 +6,7 @@ import { unified } from '@astrojs/markdown-remark'
 import rehypeSlug from 'rehype-slug'
 import { rehypeImageOptimize } from './src/utils/rehype-image'
 import mdx from '@astrojs/mdx'
+import pagefind from 'astro-pagefind'
 
 import tailwindcss from '@tailwindcss/vite'
 
@@ -17,6 +18,7 @@ export default defineConfig({
       sitemap: `${SITE_URL}/sitemap.xml`,
     }),
     mdx(),
+    pagefind(),
   ],
 
   site: SITE_URL,

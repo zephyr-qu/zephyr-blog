@@ -2,6 +2,7 @@
 title: Markdown 示例
 publishedAt: 2026-05-13
 description: 一篇展示基础 Markdown 语法的示例文章
+lang: "zh-CN"
 tags: [markdown, demo]
 isPublish: true
 isDraft: false
