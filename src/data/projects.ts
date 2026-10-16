@@ -16,7 +16,7 @@ const projects: Project[] = [
 	{
 		title: "Kanso",
 		techs: ["Golang", "React"],
-		link: "https://github.com/zephyr-qu/kanso",
+		link: "https://www.zephyrqu.top/kanso/",
 		badge: { type: "info", text: "v1.0.0" },
 	},
 	{
