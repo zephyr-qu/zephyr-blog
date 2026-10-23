@@ -24,6 +24,9 @@ pnpm-debug.log*
 .env.test
 !.env.example
 
+# agent local workspace
+.pi/
+
 # editor & OS
 .idea/
 *.suo
