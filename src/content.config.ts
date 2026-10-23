@@ -8,7 +8,16 @@ const posts = defineCollection({
     title: z.string(),
     publishedAt: z.date(),
     description: z.string(),
-    tags: z.array(z.string()).default([]),
+    tags: z
+      .array(z.string())
+      .default([])
+      .transform((tags) => [
+        ...new Set(
+          tags
+            .map((tag) => tag.trim().toLowerCase())
+            .filter((tag) => tag.length > 0)
+        ),
+      ]),
     isPublish: z.boolean(),
     isDraft: z.boolean().default(false),
     lang: z.string().default("en"),

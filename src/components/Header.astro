@@ -75,11 +75,11 @@ const pathname = removeTrailingSlash(Astro.url.pathname);
       <li>/</li>
       <li>
         <a
-          href="/search"
+          href="/tags"
           class:list={{
             ["hover:text-text-primary"]: true,
-            ["text-text-primary"]: pathname === "/search",
-          }}>Search</a
+            ["text-text-primary"]: pathname === "/tags" || pathname.startsWith("/tags/"),
+          }}>Tags</a
         >
       </li>
     </ul>

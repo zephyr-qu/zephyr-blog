@@ -1,11 +1,10 @@
 # Zephyr's Blog
 
-一个基于 [Astro](https://astro.build) 的个人博客,支持 Markdown/MDX 写作、全文搜索、RSS 订阅。
+一个基于 [Astro](https://astro.build) 的个人博客,支持 Markdown/MDX 写作、标签归档、RSS 订阅。
 
 ## 技术栈
 
 - **Astro 7** + MDX + Tailwind CSS v4
-- **Pagefind** 全文搜索
 - **Shiki** 代码高亮
 - RSS / Sitemap / robots.txt 自动生成
 

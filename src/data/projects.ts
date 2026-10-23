@@ -11,19 +11,19 @@ const projects: Project[] = [
 		title: "Wisp",
 		techs: ["Dart", "Flutter"],
 		link: "https://www.zephyrqu.top/wisp/",
-		badge: { type: "info", text: "v1.0.0" },
+		badge: { type: "info", text: "v1.0.0-beta.1" },
 	},
 	{
 		title: "Kanso",
 		techs: ["Golang", "React"],
 		link: "https://www.zephyrqu.top/kanso/",
-		badge: { type: "info", text: "v1.0.0" },
+		badge: { type: "info", text: "v0.5.1" },
 	},
 	{
 		title: "Zephyr Reader",
 		techs: ["Dart", "Flutter", "Rust"],
 		link: "https://github.com/zephyr-qu/zephyr_reader",
-		badge: { type: "tip", text: "v1.0.0" },
+		badge: { type: "tip", text: "v0.0.1" },
 	},
 	{
 		title: "FoxPlayer",

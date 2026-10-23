@@ -5,7 +5,13 @@ type Props = Project;
 
 const { title, techs, link, badge, isComingSoon } = Astro.props;
 
-const badgeClass = "bg-surface-secondary text-text-secondary border-border";
+const BADGE_CLASS: Record<NonNullable<Project["badge"]>["type"], string> = {
+  info: "bg-surface-secondary text-text-secondary border-border",
+  tip: "bg-green-500/10 text-green-500 border-green-500/20",
+  warning: "bg-amber-500/10 text-amber-500 border-amber-500/20",
+};
+
+const badgeClass = BADGE_CLASS[badge?.type ?? "info"];
 const formatTechs = (values: string[]) =>
   values.toString().replaceAll(",", " • ");
 ---

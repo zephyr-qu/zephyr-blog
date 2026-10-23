@@ -39,17 +39,13 @@ const allPosts = (await getCollection("posts"))
 
 <Layout title={`Posts tagged "${tag}"`}>
   <main class="flex flex-col gap-8">
-    <nav aria-label="Breadcrumb" class="flex flex-row items-center gap-2 text-sm text-text-secondary">
-      <a href="/" class="transition-colors hover:text-text-primary">Home</a>
-      <span aria-hidden="true">/</span>
-      <a href="/posts" class="transition-colors hover:text-text-primary">Posts</a>
-      <span aria-hidden="true">/</span>
-      <span class="text-text-primary">{tag}</span>
-    </nav>
 
     <h1 class="font-heading text-2xl text-text-primary">
-      <span class="rounded-md bg-surface-code px-2 py-0.5 text-base font-normal text-text-secondary">{tag}</span>
-      {" "}posts
+      Posts tagged{" "}
+      <span
+        class="rounded-md bg-surface-code px-2 py-0.5 text-base font-normal text-text-secondary"
+        >{tag}</span
+      >
     </h1>
 
     {allPosts.length === 0 ? (

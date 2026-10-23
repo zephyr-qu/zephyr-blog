@@ -1,0 +1,55 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+
+const posts = (await getCollection("posts")).filter(
+  (post) =>
+    post.data.isPublish &&
+    !post.data.isDraft &&
+    post.data.publishedAt <= new Date(),
+);
+
+const counts = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of post.data.tags ?? []) {
+    counts.set(tag, (counts.get(tag) ?? 0) + 1);
+  }
+}
+
+const tags = Array.from(counts, ([name, count]) => ({ name, count })).sort(
+  (first, second) =>
+    second.count - first.count || first.name.localeCompare(second.name),
+);
+---
+
+<Layout title="Tags" description="Browse all articles by tag">
+  <main class="flex flex-col gap-8">
+
+    <h1
+      class="font-heading text-2xl text-text-primary"
+      style="view-transition-name: page-heading"
+    >
+      Tags
+    </h1>
+
+    {
+      tags.length === 0 ? (
+        <p class="text-text-secondary">No tags yet.</p>
+      ) : (
+        <ul role="list" class="flex flex-row flex-wrap gap-2">
+          {tags.map(({ name, count }) => (
+            <li>
+              <a
+                href={`/tags/${name}`}
+                class="inline-flex flex-row items-center gap-2 rounded-md bg-surface-code px-2.5 py-1 text-xs text-text-secondary transition-colors hover:bg-surface hover:text-text-primary"
+              >
+                {name}
+                <span class="text-[0.6875rem] opacity-60 tabular-nums">{count}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </main>
+</Layout>
